@@ -39,12 +39,15 @@ namespace MySteps
 
         private async Task GetStepCount()
         {
-            var result = await this.healthKitStore.GetSteps(this.StartDatePicker.Date.ToDateTime(), this.EndDatePicker.Date.ToDateTime());
+            var from = this.StartDatePicker.Date.ToDateTime();
+            var to = this.EndDatePicker.Date.ToDateTime().AddDays(1);
+
+            var steps = await this.healthKitStore.GetSteps(from, to);
 
             InvokeOnMainThread(() =>
             {
-                this.TotalLabel.Text = result.Total.ToString("N0");
-                this.AvarageLabel.Text = (result.Total / result.Span.TotalDays).ToString("N0");
+                this.TotalLabel.Text = steps.ToString("N0");
+                this.AvarageLabel.Text = (steps / (to - from).TotalDays).ToString("N0");
             });
         }
 

@@ -24,16 +24,16 @@ namespace MySteps
             return healthKitStore.Value.RequestAuthorizationToShareAsync(typesToWrite, typesToRead);
         }
 
-        public Task<(double Total, TimeSpan Span)> GetSteps(DateTime from, DateTime to)
+        public Task<double> GetSteps(DateTime from, DateTime to)
         {
             var query = new HKStatisticsCollectionQuery(
                 HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount),
-                HKQuery.GetPredicateForSamples(from.ToNSDate(), to.AddDays(1).ToNSDate(), HKQueryOptions.None),
+                HKQuery.GetPredicateForSamples(from.ToNSDate(), to.ToNSDate(), HKQueryOptions.None),
                 HKStatisticsOptions.SeparateBySource | HKStatisticsOptions.CumulativeSum,
                 from.ToNSDate(),
                 new NSDateComponents { Day = 1 });
 
-            var tcs = new TaskCompletionSource<(double, TimeSpan)>();
+            var tcs = new TaskCompletionSource<double>();
 
             query.InitialResultsHandler = (q, result, error) =>
             {
@@ -41,8 +41,7 @@ namespace MySteps
                     throw new Exception(error.Description);
 
                 var total = result.Statistics.Sum(s => Math.Round(s.SumQuantity().GetDoubleValue(HKUnit.Count)));
-                var span = (result.Statistics.LastOrDefault()?.EndDate.ToDateTime().Date - from.Date) ?? TimeSpan.Zero;
-                tcs.TrySetResult((total, span));
+                tcs.TrySetResult(total);
             };
 
             healthKitStore.Value.ExecuteQuery(query);
