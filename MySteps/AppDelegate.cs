@@ -4,7 +4,7 @@ using HealthKit;
 using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
-using System.Diagnostics;
+using Microsoft.Azure.Mobile.Distribute;
 
 namespace MySteps
 {
@@ -28,7 +28,7 @@ namespace MySteps
             // Override point for customization after application launch.
             // If not required for your application you can safely delete this method
 
-            MobileCenter.Start("1e4b3cb0-9cc7-41cd-8acf-65979930baa3", typeof(Analytics), typeof(Crashes));
+            MobileCenter.Start("1e4b3cb0-9cc7-41cd-8acf-65979930baa3", typeof(Analytics), typeof(Crashes), typeof(Distribute));
 
             return true;
         }
