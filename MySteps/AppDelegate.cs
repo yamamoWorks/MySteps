@@ -4,6 +4,7 @@ using HealthKit;
 using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
+using System.Diagnostics;
 
 namespace MySteps
 {
@@ -56,27 +57,11 @@ namespace MySteps
         {
             // Restart any tasks that were paused (or not yet started) while the application was inactive. 
             // If the application was previously in the background, optionally refresh the user interface.
-
-            ValidateAuthorization();
         }
 
         public override void WillTerminate(UIApplication application)
         {
             // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
-        }
-
-        private void ValidateAuthorization()
-        {
-            var typesToWrite = new NSSet();
-            var typesToRead = new NSSet(new[] { HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount) });
-            healthKitStore.RequestAuthorizationToShare(
-                    typesToWrite,
-                    typesToRead,
-                    ReactToHealthCarePermissions);
-        }
-
-        void ReactToHealthCarePermissions(bool success, NSError error)
-        {
         }
     }
 }

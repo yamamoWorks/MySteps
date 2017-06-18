@@ -4,57 +4,48 @@ using System.Diagnostics;
 using Foundation;
 using HealthKit;
 using UIKit;
+using System.Threading.Tasks;
 
 namespace MySteps
 {
     public partial class ViewController : UIViewController
     {
-        private HKHealthStore healthKitStore;
+        private HealthStore healthKitStore;
 
         public ViewController(IntPtr handle) : base(handle)
         {
-            this.healthKitStore = new HKHealthStore();
+            this.healthKitStore = new HealthStore();
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            this.StartDatePicker.ValueChanged += (s, e) => GetStepCount();
-            this.EndDatePicker.ValueChanged += (s, e) => GetStepCount();
+            this.StartDatePicker.ValueChanged += async (s, e) => await GetStepCount();
+            this.EndDatePicker.ValueChanged += async (s, e) => await GetStepCount();
         }
 
-        public override void ViewDidAppear(bool animated)
+        public override async void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
 
             var firstDateOfThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             this.StartDatePicker.SetDate(firstDateOfThisMonth.ToNSDate(), true);
             this.EndDatePicker.SetDate(DateTime.Now.Date.ToNSDate(), true);
-            GetStepCount();
+
+            await this.healthKitStore.Initialize();
+            await GetStepCount();
         }
-        
-        private void GetStepCount()
+
+        private async Task GetStepCount()
         {
-            var query = new HKStatisticsCollectionQuery(
-                HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount),
-                HKQuery.GetPredicateForSamples(this.StartDatePicker.Date, this.EndDatePicker.Date.AddSeconds(60 * 60 * 24), HKQueryOptions.None),
-                HKStatisticsOptions.SeparateBySource | HKStatisticsOptions.CumulativeSum,
-                this.StartDatePicker.Date,
-                new NSDateComponents { Day = 1 });
+            var result = await this.healthKitStore.GetSteps(this.StartDatePicker.Date.ToDateTime(), this.EndDatePicker.Date.ToDateTime());
 
-            query.InitialResultsHandler = (q, result, error) =>
+            InvokeOnMainThread(() =>
             {
-                InvokeOnMainThread(() =>
-                {
-                    var total = result.Statistics.Sum(s => Math.Round(s.SumQuantity().GetDoubleValue(HKUnit.Count)));
-                    this.TotalLabel.Text = total.ToString("N0");
-                    var span = result.Statistics.LastOrDefault()?.EndDate.ToDateTime().Date - this.StartDatePicker.Date.ToDateTime().Date;
-                    this.AvarageLabel.Text = (total / span?.TotalDays)?.ToString("N0");
-                });
-            };
-
-            this.healthKitStore.ExecuteQuery(query);
+                this.TotalLabel.Text = result.Total.ToString("N0");
+                this.AvarageLabel.Text = (result.Total / result.Span.TotalDays).ToString("N0");
+            });
         }
 
         public override void DidReceiveMemoryWarning()
@@ -63,4 +54,4 @@ namespace MySteps
             // Release any cached data, images, etc that aren't in use.
         }
     }
-} 
+}
