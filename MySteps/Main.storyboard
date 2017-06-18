@@ -59,7 +59,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="22" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" text="Avarage :">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="22" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" text="Average :">
                                 <rect key="frame" x="66" y="548" width="108" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -96,7 +96,7 @@
                         <outlet property="StartDatePicker" destination="13" id="name-outlet-13"/>
                         <outlet property="EndDatePicker" destination="14" id="name-outlet-14"/>
                         <outlet property="TotalLabel" destination="15" id="name-outlet-15"/>
-                        <outlet property="AvarageLabel" destination="23" id="name-outlet-23"/>
+                        <outlet property="AverageLabel" destination="23" id="name-outlet-23"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>

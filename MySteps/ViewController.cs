@@ -47,7 +47,7 @@ namespace MySteps
             InvokeOnMainThread(() =>
             {
                 this.TotalLabel.Text = steps.ToString("N0");
-                this.AvarageLabel.Text = (steps / (to - from).TotalDays).ToString("N0");
+                this.AverageLabel.Text = (steps / (to - from).TotalDays).ToString("N0");
             });
         }
 

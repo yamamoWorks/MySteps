@@ -15,7 +15,7 @@ namespace MySteps
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UILabel AvarageLabel { get; set; }
+        UIKit.UILabel AverageLabel { get; set; }
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
@@ -31,9 +31,9 @@ namespace MySteps
 
         void ReleaseDesignerOutlets ()
         {
-            if (AvarageLabel != null) {
-                AvarageLabel.Dispose ();
-                AvarageLabel = null;
+            if (AverageLabel != null) {
+                AverageLabel.Dispose ();
+                AverageLabel = null;
             }
 
             if (EndDatePicker != null) {
