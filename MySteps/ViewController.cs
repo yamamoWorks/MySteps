@@ -11,6 +11,7 @@ namespace MySteps
     public partial class ViewController : UIViewController
     {
         private HealthStore healthKitStore;
+        private NSObject notificationHandle;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -23,6 +24,10 @@ namespace MySteps
 
             this.StartDatePicker.ValueChanged += async (s, e) => await GetStepCount();
             this.EndDatePicker.ValueChanged += async (s, e) => await GetStepCount();
+
+            notificationHandle = NSNotificationCenter.DefaultCenter.AddObserver(
+                UIApplication.WillEnterForegroundNotification, 
+                async a => await GetStepCount());
         }
 
         public override async void ViewDidAppear(bool animated)
@@ -37,17 +42,26 @@ namespace MySteps
             await GetStepCount();
         }
 
+        public override void ViewDidUnload()
+        {
+            base.ViewDidUnload();
+
+            NSNotificationCenter.DefaultCenter.RemoveObserver(notificationHandle);
+        }
+
         private async Task GetStepCount()
         {
             var from = this.StartDatePicker.Date.ToDateTime();
             var to = this.EndDatePicker.Date.ToDateTime().AddDays(1);
 
             var steps = await this.healthKitStore.GetSteps(from, to);
+            var today = await this.healthKitStore.GetSteps(DateTime.Now.Date, DateTime.Now.Date.AddDays(1));
 
             InvokeOnMainThread(() =>
             {
                 this.TotalLabel.Text = steps.ToString("N0");
                 this.AverageLabel.Text = (steps / (to - from).TotalDays).ToString("N0");
+                this.TodayLabel.Text = today.ToString("N0");
             });
         }
 

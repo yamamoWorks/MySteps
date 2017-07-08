@@ -27,6 +27,10 @@ namespace MySteps
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel TodayLabel { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UILabel TotalLabel { get; set; }
 
         void ReleaseDesignerOutlets ()
@@ -44,6 +48,11 @@ namespace MySteps
             if (StartDatePicker != null) {
                 StartDatePicker.Dispose ();
                 StartDatePicker = null;
+            }
+
+            if (TodayLabel != null) {
+                TodayLabel.Dispose ();
+                TodayLabel = null;
             }
 
             if (TotalLabel != null) {

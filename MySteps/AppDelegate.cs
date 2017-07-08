@@ -15,7 +15,6 @@ namespace MySteps
     public class AppDelegate : UIApplicationDelegate
     {
         // class-level declarations
-        private HKHealthStore healthKitStore = new HKHealthStore();
 
         public override UIWindow Window
         {
@@ -51,6 +50,7 @@ namespace MySteps
         {
             // Called as part of the transiton from background to active state.
             // Here you can undo many of the changes made on entering the background.
+
         }
 
         public override void OnActivated(UIApplication application)
