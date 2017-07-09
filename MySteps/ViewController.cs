@@ -54,7 +54,7 @@ namespace MySteps
                 },
                 Axes =
                 {
-                    new CategoryAxis{ ItemsSource = this.stepData, MaximumRange = 7, MinimumRange = 7, LabelField = "Start", StringFormat = "M/dd", TickStyle = TickStyle.None, IsPanEnabled = true, IsZoomEnabled = false },
+                    new CategoryAxis{ ItemsSource = this.stepData, MaximumRange = 7, MinimumRange = 0, LabelField = "Start", StringFormat = "M/dd", TickStyle = TickStyle.None, IsPanEnabled = true, IsZoomEnabled = false },
                     new LinearAxis{ IsAxisVisible = false , IsPanEnabled = false, IsZoomEnabled = false}
                 }
             };
@@ -107,9 +107,11 @@ namespace MySteps
             InvokeOnMainThread(() =>
             {
                 this.PlotView.Model.InvalidatePlot(true);
+
                 foreach (var ax in this.PlotView.Model.Axes.OfType<CategoryAxis>())
                 {
                     ax.Reset();
+                    ax.MinimumRange = Math.Min(ax.MaximumRange, ax.DataMaximum - ax.DataMinimum);
                     ax.AbsoluteMinimum = ax.DataMinimum;
                     ax.AbsoluteMaximum = ax.DataMaximum;
                     ax.Pan(double.MinValue);
