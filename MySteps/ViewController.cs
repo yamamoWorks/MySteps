@@ -49,26 +49,15 @@ namespace MySteps
                     {
                         ItemsSource = this.stepData,
                         ValueField = "Value",
-                        LabelFormatString = "{0}"
+                        LabelFormatString = "{0}",
+                        FillColor = OxyColors.Orange
                     }
                 },
                 Axes =
                 {
                     new CategoryAxis{ ItemsSource = this.stepData, MaximumRange = 7, MinimumRange = 0, LabelField = "Start", StringFormat = "M/dd", TickStyle = TickStyle.None, IsPanEnabled = true, IsZoomEnabled = false },
-                    new LinearAxis{ IsAxisVisible = false , IsPanEnabled = false, IsZoomEnabled = false}
+                    new LinearAxis{ IsAxisVisible = false , IsPanEnabled = false, IsZoomEnabled = false }
                 }
-            };
-
-            this.PlotView.Model.Axes[0].AxisChanged += (s, e) =>
-            {
-                var ax = (Axis)s;
-                Console.WriteLine($"{e.ChangeType} : {e.DeltaMinimum}, {e.DeltaMinimum}");
-                Console.WriteLine($"  {ax.Minimum}, {ax.Maximum}");
-                Console.WriteLine($"  Actual={ax.ActualMinimum}, {ax.ActualMaximum}");
-                Console.WriteLine($"  Absolute={ax.AbsoluteMinimum}, {ax.AbsoluteMaximum}");
-                Console.WriteLine($"  Data={ax.DataMinimum}, {ax.DataMaximum}");
-                Console.WriteLine($"  Filter={ax.FilterMinValue}, {ax.FilterMaxValue}");
-                Console.WriteLine("");
             };
         }
 
