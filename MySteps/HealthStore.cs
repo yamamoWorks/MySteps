@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Foundation;
 using HealthKit;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 namespace MySteps
 {
@@ -24,7 +26,7 @@ namespace MySteps
             return healthKitStore.Value.RequestAuthorizationToShareAsync(typesToWrite, typesToRead);
         }
 
-        public Task<double> GetSteps(DateTime from, DateTime to)
+        public Task<DataItem[]> GetSteps(DateTime from, DateTime to)
         {
             var query = new HKStatisticsCollectionQuery(
                 HKQuantityType.Create(HKQuantityTypeIdentifier.StepCount),
@@ -33,15 +35,22 @@ namespace MySteps
                 from.ToNSDate(),
                 new NSDateComponents { Day = 1 });
 
-            var tcs = new TaskCompletionSource<double>();
+            var tcs = new TaskCompletionSource<DataItem[]>();
 
             query.InitialResultsHandler = (q, result, error) =>
             {
                 if (error != null)
                     throw new Exception(error.Description);
 
-                var total = result.Statistics.Sum(s => Math.Round(s.SumQuantity().GetDoubleValue(HKUnit.Count)));
-                tcs.TrySetResult(total);
+                tcs.TrySetResult(
+                    result.Statistics.Where(s => s.StartDate.ToDateTime() >= from).Select(s =>
+                    {
+                        return new DataItem
+                        {
+                            Start = s.StartDate.ToDateTime().ToLocalTime(),
+                            Value = Math.Round(s.SumQuantity().GetDoubleValue(HKUnit.Count))
+                        };
+                    }).ToArray());
             };
 
             healthKitStore.Value.ExecuteQuery(query);

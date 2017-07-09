@@ -23,6 +23,10 @@ namespace MySteps
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        OxyPlot.Xamarin.iOS.PlotView PlotView { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIDatePicker StartDatePicker { get; set; }
 
         [Outlet]
@@ -43,6 +47,11 @@ namespace MySteps
             if (EndDatePicker != null) {
                 EndDatePicker.Dispose ();
                 EndDatePicker = null;
+            }
+
+            if (PlotView != null) {
+                PlotView.Dispose ();
+                PlotView = null;
             }
 
             if (StartDatePicker != null) {
